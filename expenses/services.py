@@ -34,6 +34,13 @@ def total_for(user, start, end):
     return Expense.objects.filter(user=user, date__range=(start, end)).aggregate(total=Sum('amount')).get('total') or ZERO
 
 
+def budget_total_for(user, start, end, period_type):
+    expenses = Expense.objects.filter(user=user, date__range=(start, end))
+    if period_type == Budget.WEEKLY:
+        expenses = expenses.filter(recurring_payment__isnull=True)
+    return expenses.aggregate(total=Sum('amount')).get('total') or ZERO
+
+
 def category_totals(user, start, end):
     return list(Expense.objects.filter(user=user, date__range=(start, end)).values('category__name').annotate(total=Sum('amount')).order_by('-total'))
 
@@ -42,7 +49,7 @@ def budget_status(user, period_type, day=None):
     day = day or date.today()
     start, end = period_range(period_type, day)
     budget = Budget.objects.filter(user=user, period_type=period_type, start_date=start).first()
-    spent = total_for(user, start, end)
+    spent = budget_total_for(user, start, end, period_type)
     return {'budget': budget, 'spent': spent, 'start': start, 'end': end, 'remaining': (budget.amount - spent) if budget else None}
 
 
