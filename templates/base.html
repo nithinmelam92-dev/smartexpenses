@@ -1,0 +1,23 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Smart Expenses Tracker</title><link rel="stylesheet" href="{% static 'css/app.css' %}"></head>
+<body>
+<header class="site-header">
+	<a class="brand" href="{% url 'dashboard' %}">Smart<span>Expenses</span></a>
+	<nav class="nav" aria-label="Primary navigation">
+		<a class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
+		<a class="{% if request.resolver_match.app_name == 'expenses' %}active{% endif %}" href="{% url 'expenses:list' %}">Expenses</a>
+		<a class="{% if request.resolver_match.app_name == 'budgets' %}active{% endif %}" href="{% url 'budgets:list' %}">Budgets</a>
+		<a class="{% if request.resolver_match.app_name == 'analysis' %}active{% endif %}" href="{% url 'analysis:reports' %}">Analysis</a>
+		<a class="{% if request.resolver_match.app_name == 'recurring' and request.resolver_match.url_name != 'reminder' %}active{% endif %}" href="{% url 'recurring:list' %}">Recurring</a>
+		<a class="{% if request.resolver_match.url_name == 'reminder' %}active{% endif %}" href="{% url 'recurring:reminder' %}">Reminder</a>
+		{% if user.is_authenticated %}<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="secondary" type="submit">Log out</button></form>{% endif %}
+	</nav>
+</header>
+<main class="site-main">
+{% if messages %}{% for message in messages %}<p class="alert">{{ message }}</p>{% endfor %}{% endif %}
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>
