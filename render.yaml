@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: smartexpenses
+    runtime: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn core.wsgi:application
+    healthCheckPath: /health/
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS
+        fromService:
+          type: web
+          name: smartexpenses
+          property: host
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: https://smartexpenses.onrender.com
+      - key: DATABASE_URL
+        sync: false

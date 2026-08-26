@@ -18,9 +18,15 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 from dashboard.views import dashboard
+from django.http import JsonResponse
+
+
+def health(request):
+    return JsonResponse({'status': 'ok'})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('health/', health, name='health'),
     path('', dashboard, name='dashboard'),
     path('accounts/', include('accounts.urls')),
     path('expenses/', include('expenses.urls')),
