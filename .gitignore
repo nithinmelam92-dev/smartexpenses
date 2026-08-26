@@ -6,3 +6,6 @@ __pycache__/
 .vscode/
 staticfiles/
 media/
+*.log
+.coverage
+.pytest_cache/
