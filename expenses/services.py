@@ -2,9 +2,10 @@ import calendar
 from datetime import date, timedelta
 from decimal import Decimal
 
-from django.db.models import Sum
+from django.db.models import Q, Sum
 
 from budgets.models import Budget
+from recurring.models import RecurringExpense
 from .models import Expense
 
 ZERO = Decimal('0.00')
@@ -37,7 +38,10 @@ def total_for(user, start, end):
 def budget_total_for(user, start, end, period_type):
     expenses = Expense.objects.filter(user=user, date__range=(start, end))
     if period_type == Budget.WEEKLY:
-        expenses = expenses.filter(recurring_payment__isnull=True)
+        expenses = expenses.filter(
+            Q(recurring_payment__isnull=True)
+            | Q(recurring_payment__recurring_expense__frequency=RecurringExpense.WEEKLY)
+        )
     return expenses.aggregate(total=Sum('amount')).get('total') or ZERO
 
 
