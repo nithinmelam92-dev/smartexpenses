@@ -87,9 +87,10 @@ DATABASES = {
     }
 }
 
-if os.environ.get('DATABASE_URL'):
+database_url = os.environ.get('DATABASE_URL', '').strip()
+if database_url:
     import dj_database_url
-    DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'], conn_max_age=600, conn_health_checks=True)
+    DATABASES['default'] = dj_database_url.parse(database_url, conn_max_age=600, conn_health_checks=True)
 
 
 # Password validation
