@@ -4,7 +4,7 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Smart Expenses Tracker</title><link rel="stylesheet" href="{% static 'css/app.css' %}"></head>
 <body>
 <header class="site-header">
-	<a class="brand" href="{% url 'dashboard' %}">Smart<span>Expenses</span></a>
+	<a class="brand" href="{% url 'dashboard' %}" aria-label="Smart Expenses dashboard"><img src="{% static 'images/logo.jpeg' %}" alt="" aria-hidden="true"><span>Smart<span>Expenses</span></span></a>
 	<nav class="nav" aria-label="Primary navigation">
 		<a class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
 		<a class="{% if request.resolver_match.app_name == 'expenses' %}active{% endif %}" href="{% url 'expenses:list' %}">Expenses</a>
